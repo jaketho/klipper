@@ -40,6 +40,7 @@ class PrinterExtruder:
         if self.pressure_advance:
             self.pressure_advance_lookahead_time = config.getfloat(
                 'pressure_advance_lookahead_time', 0.010, minval=0.)
+        self.extrude_lag = config.getfloat('extrude_lag', 0., minval=0.)
         self.need_motor_enable = True
         self.extrude_pos = 0.
     def get_heater(self):
@@ -217,6 +218,7 @@ class PrinterExtruder:
 
 # Dummy extruder class used when a printer has no extruder at all
 class DummyExtruder:
+    extrude_lag = 0.
     def set_active(self, print_time, is_active):
         return 0.
     def motor_off(self, move_time):

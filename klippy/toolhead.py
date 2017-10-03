@@ -86,7 +86,8 @@ class Move:
         # Generate step times for the move
         next_move_time = self.toolhead.get_next_move_time()
         if self.is_kinematic_move:
-            self.toolhead.kin.move(next_move_time, self)
+            self.toolhead.kin.move(
+                next_move_time + self.toolhead.extruder.extrude_lag, self)
         if self.axes_d[3]:
             self.toolhead.extruder.move(next_move_time, self)
         self.toolhead.update_move_time(
@@ -253,7 +254,7 @@ class ToolHead:
             self.need_check_stall = -1.
             self.reactor.update_timer(self.flush_timer, self.reactor.NEVER)
             for m in self.all_mcus:
-                m.flush_moves(self.print_time)
+                m.flush_moves(self.print_time + self.extruder.extrude_lag)
     def get_last_move_time(self):
         self._flush_lookahead()
         return self.get_next_move_time()
